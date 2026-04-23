@@ -6,8 +6,10 @@ import {
   BadgeCheck,
   Building2,
   ChevronRight,
+  Download,
   Globe,
   PlayCircle,
+  Presentation,
   ShieldAlert,
   Smartphone,
   Sparkles,
@@ -21,11 +23,11 @@ import {
   Cell,
   Pie,
   PieChart,
+  PolarAngleAxis,
+  PolarGrid,
+  PolarRadiusAxis,
   Radar,
   RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -63,7 +65,7 @@ const opportunityData = [
   { name: 'Unificar funnel', value: 26 },
   { name: 'Visibilizar costos', value: 22 },
   { name: 'Prueba social', value: 18 },
-  { name: 'Storytelling de seguridad', value: 16 },
+  { name: 'Seguridad y privacidad', value: 16 },
   { name: 'Arquitectura UX', value: 18 }
 ];
 
@@ -155,19 +157,48 @@ function levelLabel(level: 'high' | 'medium' | 'low') {
   return 'Prioridad baja';
 }
 
+function severityGradient(severity: number) {
+  if (severity >= 85) return 'linear-gradient(90deg, #ff6b7a, #ff8ca1)';
+  if (severity >= 70) return 'linear-gradient(90deg, #ffb84d, #ffd37e)';
+  return 'linear-gradient(90deg, #7ef0c7, #a6ffe0)';
+}
+
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<'overview' | 'presence' | 'risks' | 'actions'>('overview');
-
   const maxSeverity = useMemo(() => Math.max(...riskMatrix.map((item) => item.severity)), []);
+
+  const handlePrint = () => window.print();
+  const handlePresentation = () => {
+    document.documentElement.requestFullscreen?.().catch(() => undefined);
+  };
 
   return (
     <main className="container">
+      <div className="topbar">
+        <div className="brand">
+          <div className="brand-mark">A</div>
+          <div className="brand-copy">
+            <h1>Maxikash Audit Dashboard</h1>
+            <p>Versión ejecutiva lista para compartir, presentar o exportar a PDF.</p>
+          </div>
+        </div>
+
+        <div className="actions">
+          <button className="btn" onClick={handlePresentation}>
+            <Presentation size={16} /> Modo presentación
+          </button>
+          <button className="btn primary" onClick={handlePrint}>
+            <Download size={16} /> Exportar / PDF
+          </button>
+        </div>
+      </div>
+
       <section className="hero">
         <div className="panel hero-main">
           <div className="kicker">
             <Sparkles size={15} /> Auditoría digital interactiva
           </div>
-          <h1>Maxikash.mx: presencia digital, desafíos y ruta de mejora</h1>
+          <h2>Maxikash.mx: presencia digital, desafíos y ruta de mejora</h2>
           <p className="subtitle">
             Dashboard ejecutivo para presentar cómo se ve Maxikash desde afuera: fortaleza digital actual,
             señales de confianza, puntos de fricción, riesgos reputacionales y acciones prioritarias.
@@ -195,11 +226,17 @@ export default function Dashboard() {
               <div className="metric-note">Enfocadas en confianza y conversión.</div>
             </div>
           </div>
+          <div className="presentation-tip">
+            <ChevronRight size={16} /> Usa “Exportar / PDF” para guardar una versión imprimible desde el navegador.
+          </div>
         </div>
 
         <aside className="panel hero-side">
           <div className="section-title">
-            <h2>Lectura ejecutiva</h2>
+            <div>
+              <h3>Lectura ejecutiva</h3>
+              <p>Qué funciona, qué frena y qué urge resolver.</p>
+            </div>
           </div>
           <div className="list">
             <div className="list-item">
@@ -230,7 +267,7 @@ export default function Dashboard() {
           <div className="card span-7">
             <div className="section-title">
               <div>
-                <h2>Diagnóstico en 6 dimensiones</h2>
+                <h3>Diagnóstico en 6 dimensiones</h3>
                 <p>Comparativo entre estado actual y nivel recomendado.</p>
               </div>
               <span className="badge"><TrendingUp size={14} /> Gap visible</span>
@@ -250,14 +287,14 @@ export default function Dashboard() {
           <div className="card span-5">
             <div className="section-title">
               <div>
-                <h2>Hallazgos clave</h2>
+                <h3>Hallazgos clave</h3>
                 <p>Qué define hoy la percepción pública.</p>
               </div>
             </div>
             <div className="list">
               {findings.resumen.map((item, index) => (
                 <div key={index} className="list-item">
-                  <h3>{index + 1}. Insight</h3>
+                  <h4>{index + 1}. Insight</h4>
                   <p>{item}</p>
                 </div>
               ))}
@@ -267,7 +304,7 @@ export default function Dashboard() {
           <div className="card span-4">
             <div className="section-title">
               <div>
-                <h2>Fortalezas visibles</h2>
+                <h3>Fortalezas visibles</h3>
                 <p>Activos ya construidos.</p>
               </div>
               <span className="badge low"><BadgeCheck size={14} /> Favorable</span>
@@ -282,7 +319,7 @@ export default function Dashboard() {
           <div className="card span-4">
             <div className="section-title">
               <div>
-                <h2>Debilidades visibles</h2>
+                <h3>Debilidades visibles</h3>
                 <p>Fricciones de confianza y UX.</p>
               </div>
               <span className="badge medium"><AlertTriangle size={14} /> Atención</span>
@@ -297,7 +334,7 @@ export default function Dashboard() {
           <div className="card span-4">
             <div className="section-title">
               <div>
-                <h2>Riesgos visibles</h2>
+                <h3>Riesgos visibles</h3>
                 <p>Lo que más puede dañar reputación o conversión.</p>
               </div>
               <span className="badge high"><ShieldAlert size={14} /> Alto</span>
@@ -316,7 +353,7 @@ export default function Dashboard() {
           <div className="card span-7">
             <div className="section-title">
               <div>
-                <h2>Madurez por canal</h2>
+                <h3>Madurez por canal</h3>
                 <p>La marca tiene amplitud, pero no todos los canales pesan igual.</p>
               </div>
             </div>
@@ -328,7 +365,7 @@ export default function Dashboard() {
                 <Tooltip />
                 <Bar dataKey="score" radius={[8, 8, 0, 0]}>
                   {channelData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={index % 2 === 0 ? '#49c6ff' : '#7ef0c7'} />
+                    <Cell key={`cell-${entry.name}-${index}`} fill={index % 2 === 0 ? '#49c6ff' : '#7ef0c7'} />
                   ))}
                 </Bar>
               </BarChart>
@@ -338,15 +375,15 @@ export default function Dashboard() {
           <div className="card span-5">
             <div className="section-title">
               <div>
-                <h2>Palancas de crecimiento</h2>
+                <h3>Palancas de crecimiento</h3>
                 <p>Dónde hay mayor retorno reputacional.</p>
               </div>
             </div>
             <ResponsiveContainer width="100%" height={360}>
               <PieChart>
                 <Pie data={opportunityData} dataKey="value" nameKey="name" innerRadius={75} outerRadius={120} paddingAngle={4}>
-                  {opportunityData.map((_, index) => (
-                    <Cell key={index} fill={['#49c6ff', '#7ef0c7', '#ffb84d', '#9f8cff', '#ff6b7a'][index]} />
+                  {opportunityData.map((item, index) => (
+                    <Cell key={`${item.name}-${index}`} fill={['#49c6ff', '#7ef0c7', '#ffb84d', '#9f8cff', '#ff6b7a'][index]} />
                   ))}
                 </Pie>
                 <Tooltip />
@@ -357,7 +394,7 @@ export default function Dashboard() {
           <div className="card span-12">
             <div className="section-title">
               <div>
-                <h2>Lectura de la huella digital</h2>
+                <h3>Lectura de la huella digital</h3>
                 <p>Cómo se perciben los activos públicos principales.</p>
               </div>
             </div>
@@ -367,7 +404,7 @@ export default function Dashboard() {
                 return (
                   <div key={item.title} className="card span-3" style={{ padding: 18 }}>
                     <div className="badge"><Icon size={14} /> Canal</div>
-                    <h3 style={{ marginBottom: 8 }}>{item.title}</h3>
+                    <h4 style={{ marginBottom: 8 }}>{item.title}</h4>
                     <p style={{ color: 'var(--muted)', lineHeight: 1.6, margin: 0 }}>{item.text}</p>
                   </div>
                 );
@@ -385,7 +422,7 @@ export default function Dashboard() {
           <div className="card span-12">
             <div className="section-title">
               <div>
-                <h2>Matriz de riesgos</h2>
+                <h3>Matriz de riesgos</h3>
                 <p>Severidad combinada entre impacto reputacional y probabilidad visible.</p>
               </div>
               <span className="badge high"><Users size={14} /> Riesgos de confianza</span>
@@ -407,17 +444,15 @@ export default function Dashboard() {
                     <td>{item.probability}</td>
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <div style={{ width: 160, height: 10, background: 'rgba(255,255,255,0.08)', borderRadius: 999 }}>
-                          <div
+                        <div className="progress">
+                          <span
                             style={{
                               width: `${(item.severity / maxSeverity) * 100}%`,
-                              height: '100%',
-                              borderRadius: 999,
-                              background: item.severity >= 85 ? 'linear-gradient(90deg, #ff6b7a, #ff8ca1)' : item.severity >= 70 ? 'linear-gradient(90deg, #ffb84d, #ffd37e)' : 'linear-gradient(90deg, #7ef0c7, #a6ffe0)'
+                              background: severityGradient(item.severity)
                             }}
                           />
                         </div>
-                        <strong>{item.severity}</strong>
+                        <strong style={{ color: 'var(--text)' }}>{item.severity}</strong>
                       </div>
                     </td>
                   </tr>
@@ -429,7 +464,7 @@ export default function Dashboard() {
           <div className="card span-6">
             <div className="section-title">
               <div>
-                <h2>Riesgo reputacional central</h2>
+                <h3>Riesgo reputacional central</h3>
                 <p>La confianza todavía depende demasiado del esfuerzo del usuario.</p>
               </div>
             </div>
@@ -448,7 +483,7 @@ export default function Dashboard() {
           <div className="card span-6">
             <div className="section-title">
               <div>
-                <h2>Riesgo operativo visible</h2>
+                <h3>Riesgo operativo visible</h3>
                 <p>Lo que más puede afectar conversión y marca a corto plazo.</p>
               </div>
             </div>
@@ -471,14 +506,14 @@ export default function Dashboard() {
           <div className="card span-8">
             <div className="section-title">
               <div>
-                <h2>Plan de acción prioritario</h2>
+                <h3>Plan de acción prioritario</h3>
                 <p>Orden sugerido para capturar confianza y luego escalar conversión.</p>
               </div>
             </div>
             <div className="list">
               {priorities.map((item, index) => (
                 <div key={item.title} className="list-item">
-                  <div style={{ display: 'flex', justifyContent: 'space-between', gap: 16, marginBottom: 8, alignItems: 'center' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', gap: 16, marginBottom: 8, alignItems: 'center', flexWrap: 'wrap' }}>
                     <h3 style={{ margin: 0 }}>{index + 1}. {item.title}</h3>
                     <span className={`badge ${item.level}`}>{levelLabel(item.level)}</span>
                   </div>
@@ -491,7 +526,7 @@ export default function Dashboard() {
           <div className="card span-4">
             <div className="section-title">
               <div>
-                <h2>Resultado esperado</h2>
+                <h3>Resultado esperado</h3>
                 <p>Qué cambia si se ejecutan bien estas mejoras.</p>
               </div>
             </div>
@@ -514,7 +549,7 @@ export default function Dashboard() {
           <div className="card span-12">
             <div className="section-title">
               <div>
-                <h2>Recomendación final</h2>
+                <h3>Recomendación final</h3>
                 <p>La prioridad no es abrir más canales, sino hacer más confiable el momento de decisión.</p>
               </div>
             </div>
